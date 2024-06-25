@@ -9,6 +9,8 @@ const alumnosPermitidos = [
     '22200202',
     '22200145',
     '22200131',
+    '22200155', 
+    '22200149'
 ];
 
 const pool = new Pool({
