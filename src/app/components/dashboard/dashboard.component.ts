@@ -20,35 +20,40 @@ export class DashboardComponent {
 
   constructor(public auth: AuthService, private http: HttpClient) { }
 
-  
+
 
   logOut() {
     this.auth.logout();
   }
 
   reporteAsistencias() {
-    this.http.get<any[]>(`${this.apiUrl}/asistencias`).subscribe(
-      data => {
-        this.asistencias = data;
-        this.isActivated = true;
-      },
-      error => {
-        console.error('Error al obtener reporte de asistencias:', error);
-        // Manejo de errores si es necesario
-      }
-    );
+    const url = `${this.apiUrl}/asistencias`;
+    window.location.href = url;
+    // this.http.get<any[]>(`${this.apiUrl}/asistencias`).subscribe(
+    //   data => {
+    //     this.asistencias = data;
+    //     this.isActivated = true;
+    //   },
+    //   error => {
+    //     console.error('Error al obtener reporte de asistencias:', error);
+    //     // Manejo de errores si es necesario
+    //   }
+    // );
   }
 
   listadoAlumnos() {
-    this.http.get<any[]>(`${this.apiUrl}/alumnos`).subscribe(
-      data => {
-        this.alumnos = data;
-        this.isActivated = false;
-      },
-      error => {
-        console.error('Error al obtener listado de alumnos:', error);
-        // Manejo de errores si es necesario
-      }
-    );
+    const url = `${this.apiUrl}/alumnos`;
+    window.location.href = url;
+    //   this.http.get<any[]>(`${this.apiUrl}/alumnos`).subscribe(
+    //     data => {
+    //       this.alumnos = data;
+    //       this.isActivated = false;
+    //     },
+    //     error => {
+    //       console.error('Error al obtener listado de alumnos:', error);
+    //       // Manejo de errores si es necesario
+    //     }
+    //   );
+    // }
   }
 }
