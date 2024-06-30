@@ -1,0 +1,70 @@
+<div class="flex flex-col items-center justify-center min-h-screen bg-gray-100" *ngIf="auth.user$ | async as user">
+    <div class="flex justify-end w-full">
+      <button type="button" (click)="logOut()" class="btn btn-primary bg-red-500 rounded-xl p-3 mt-4 mr-4">Cerrar sesión</button>
+    </div>
+    <div class="flex flex-col items-center justify-center w-full md:w-2/3 lg:w-1/2 bg-white rounded-lg shadow-lg p-6 mt-6">
+      <h1 class="text-3xl font-bold text-center mb-6">Bienvenido {{ user.name }}</h1>
+      <p class="text-center font-bold">Conéctese al wifi del ESP32</p>
+      <ul class="list-disc list-inside text-left mb-4">
+        <li>SSID: AsistenciaESP32</li>
+        <li>PASSWORD: contrasenia123</li>
+      </ul>
+      <div class="flex flex-row">
+        <button type="button" (click)="reporteAsistencias()" class="btn btn-primary bg-sky-400 rounded-xl p-3 mt-4 mr-4">Obtener Reporte de Asistencias</button>
+        <button type="button" (click)="listadoAlumnos()" class="btn btn-primary bg-sky-400 rounded-xl p-3 mt-4 mr-4">Obtener Listado de Alumnos</button>
+      </div>
+      
+      <div *ngIf="isActivated">
+        <div *ngIf="asistencias.length > 0" class="mt-6">
+          <h2 class="text-2xl font-bold text-center mb-4">Reporte de Asistencias</h2>
+          <table class="min-w-full bg-white">
+            <thead>
+              <tr>
+                <th class="py-2 px-4 border-b border-gray-200">ID</th>
+                <th class="py-2 px-4 border-b border-gray-200">Alumno ID</th>
+                <th class="py-2 px-4 border-b border-gray-200">Estado</th>
+                <th class="py-2 px-4 border-b border-gray-200">Timestamp</th>
+                <th class="py-2 px-4 border-b border-gray-200">Nombre Alumno</th>
+                <th class="py-2 px-4 border-b border-gray-200">Email Alumno</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let asistencia of asistencias">
+                <td class="py-2 px-4 border-b border-gray-200">{{ asistencia.id }}</td>
+                <td class="py-2 px-4 border-b border-gray-200">{{ asistencia.alumno_id }}</td>
+                <td class="py-2 px-4 border-b border-gray-200">{{ asistencia.estado }}</td>
+                <td class="py-2 px-4 border-b border-gray-200">{{ asistencia.timestamp }}</td>
+                <td class="py-2 px-4 border-b border-gray-200">{{ asistencia.nombre_alumno }}</td>
+                <td class="py-2 px-4 border-b border-gray-200">{{ asistencia.email_alumno }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+  
+      <div *ngIf="!isActivated">
+        <div *ngIf="alumnos.length > 0" class="mt-6">
+          <h2 class="text-2xl font-bold text-center mb-4">Listado de Alumnos</h2>
+          <table class="min-w-full bg-white">
+            <thead>
+              <tr>
+                <th class="py-2 px-4 border-b border-gray-200">ID</th>
+                <th class="py-2 px-4 border-b border-gray-200">Código Alumno</th>
+                <th class="py-2 px-4 border-b border-gray-200">Nombre</th>
+                <th class="py-2 px-4 border-b border-gray-200">Email</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let alumno of alumnos">
+                <td class="py-2 px-4 border-b border-gray-200">{{ alumno.id }}</td>
+                <td class="py-2 px-4 border-b border-gray-200">{{ alumno.codigo_alumno }}</td>
+                <td class="py-2 px-4 border-b border-gray-200">{{ alumno.nombre }}</td>
+                <td class="py-2 px-4 border-b border-gray-200">{{ alumno.email }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  

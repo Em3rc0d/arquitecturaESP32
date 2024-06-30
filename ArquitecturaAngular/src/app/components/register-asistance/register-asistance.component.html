@@ -1,0 +1,25 @@
+<div class="flex flex-col items-center justify-center min-h-screen bg-gray-100" *ngIf="auth.user$ | async as user">
+    <div class="flex justify-end w-full">
+        <button type="button" (click)="logOut()" class="btn btn-primary bg-red-500 rounded-xl p-3 mt-4 mr-4">Cerrar sesión</button>
+    </div>
+    <div class="flex flex-col items-center justify-center w-full md:w-2/3 lg:w-1/2 bg-white rounded-lg shadow-lg p-6 mt-6">
+        <h1 class="text-3xl font-bold text-center mb-6">Bienvenido {{user.name}}</h1>
+        <p class="text-center font-bold">Conéctese al wifi del ESP32</p>
+        <ul class="list-disc list-inside text-left mb-4">
+            <li>SSID: AsistenciaESP32</li>
+            <li>PASSWORD: contrasenia123</li>
+        </ul>
+        <form class="w-full">
+            <label for="alumnoId" class="block mb-2 text-center">Ingrese su ID y haga clic en el botón para enviarlo al ESP32 y registrar su asistencia:</label>
+            <input
+                type="text"
+                id="alumnoId"
+                name="id"
+                required
+                placeholder="22200202"
+                class="block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+            <button type="button" (click)="registerAsistance()" class="btn btn-primary bg-green-300 rounded-xl p-3 mt-6 w-full">Registrar Asistencia</button>
+        </form>
+    </div>
+</div>
