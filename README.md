@@ -1,6 +1,6 @@
 # Proyecto Arquitectura 
 
-Link: [https://em3rc0d.github.io/arquitecturaESP32/](https://arquitectura-esp-32.vercel.app)
+Link: [https://arquitectura-esp-32.vercel.app](https://arquitectura-esp-32.vercel.app)
 
 Este proyecto consiste en un sistema de registro de asistencia utilizando un ESP32 como punto de acceso WiFi y un servidor Node.js para manejar las solicitudes y almacenar los registros en una base de datos PostgreSQL.
 
