@@ -16,7 +16,7 @@ export class DashboardComponent {
   asistencias: any[] = [];
   alumnos: any[] = [];
   isActivated: boolean = false;
-  private apiUrl = 'https://192.168.4.2:3000';
+  private apiUrl = 'http://192.168.4.2:3000';
 
   constructor(public auth: AuthService, private http: HttpClient) { }
 

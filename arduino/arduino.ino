@@ -1,11 +1,11 @@
 #include <WiFi.h>
 #include <HTTPClient.h>
 
-const char* ssid = "AsistenciaESP32"; // Nombre del WiFi del ESP32
-const char* password = "contrasenia123"; // Contraseña del WiFi del ESP32
-const char* serverAddress = "http://192.168.4.2:3000/register"; // Dirección del servidor Node.js
+const char* ssid = "AsistenciaESP32";
+const char* password = "contrasenia123";
+const char* serverAddress = "http://192.168.4.2:3000/register";
 
-WiFiServer server(80); // Puerto 80 para el servidor web
+WiFiServer server(80);
 
 void setup() {
     Serial.begin(115200);
@@ -38,9 +38,11 @@ void loop() {
                 if (request.indexOf("/register") != -1) {
                     // Extraer el ID del alumno del cuerpo de la solicitud
                     String alumnoId = obtenerParametro(request, "id");
+                    String nombre = obtenerParametro(request, "name");
+                    String email = obtenerParametro(request, "email");
 
                     // Enviar solicitud al servidor Node.js
-                    int responseCode = enviarRegistroAlServidor(alumnoId);
+                    int responseCode = enviarRegistroAlServidor(alumnoId, nombre, email);
 
                     // Enviar respuesta al cliente (HTML)
                     String html = generarHTML(responseCode);
@@ -59,7 +61,6 @@ void loop() {
     }
 }
 
-// Función para obtener un parámetro de una solicitud HTTP
 String obtenerParametro(String request, String parametro) {
     int inicio = request.indexOf(parametro + "=");
     if (inicio == -1) return "";
@@ -70,13 +71,12 @@ String obtenerParametro(String request, String parametro) {
     return request.substring(inicio, fin);
 }
 
-// Función para enviar el registro al servidor Node.js
-int enviarRegistroAlServidor(String alumnoId) {
+int enviarRegistroAlServidor(String alumnoId, String nombre, String email) {
     HTTPClient http;
     String url = serverAddress;
 
     // Construir datos a enviar
-    String postData = "id=" + alumnoId;
+    String postData = "id=" + alumnoId + "&nombre=" + nombre + "&email=" + email;
 
     Serial.print("Enviando solicitud a: ");
     Serial.println(url);
@@ -95,18 +95,13 @@ int enviarRegistroAlServidor(String alumnoId) {
         Serial.println("Respuesta del servidor Node.js:");
         Serial.println(response);
 
-        // Manejo específico de errores HTTP
         if (httpResponseCode == HTTP_CODE_OK) {
-            // Registro exitoso
             return 200;
         } else if (httpResponseCode == HTTP_CODE_NOT_FOUND) {
-            // Código de alumno no encontrado
             return 404;
         } else if (httpResponseCode == HTTP_CODE_FORBIDDEN) {
-            // Código de alumno no permitido (403)
             return 403;
         } else {
-            // Otros errores
             return httpResponseCode;
         }
     } else {
