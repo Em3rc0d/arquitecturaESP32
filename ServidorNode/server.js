@@ -34,7 +34,7 @@ app.post('/register', async (req, res) => {
     try {
         let alumnoId = await buscarAlumnoPorCodigo(id);
         let alumnoEmail = await buscarAlumnoPorEmail(email);
-        if (alumnoId != null && alumnoEmail != null) {
+        if (alumnoId != null && alumnoEmail != null && alumnoId == alumnoEmail) {
           await registrarAsistencia(alumnoId, nombre, email);
           console.log('Registro de asistencia exitoso');
           res.status(200).json({ message: 'Registro de asistencia exitoso' });
