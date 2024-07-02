@@ -32,30 +32,29 @@ app.post('/register', async (req, res) => {
     const { id, nombre, email } = req.body;
 
     try {
-        // Verificar si el alumno ya existe en la tabla alumnos
         let alumnoId = await buscarAlumnoPorCodigo(id);
-
-        // Si no existe, insertarlo en la tabla alumnos
-        // if (!alumnoId) {
-        //     alumnoId = await insertarAlumno(id, nombre, email);
-        // }
-
-        // Registrar la asistencia en la tabla asistencia
-        await registrarAsistencia(alumnoId, nombre, email);
-
-        console.log('Registro de asistencia exitoso');
-        res.status(200).json({ message: 'Registro de asistencia exitoso' });
+        let alumnoEmail = await buscarAlumnoPorEmail(email);
+        if (alumnoId != null && alumnoEmail != null) {
+          await registrarAsistencia(alumnoId, nombre, email);
+          console.log('Registro de asistencia exitoso');
+          res.status(200).json({ message: 'Registro de asistencia exitoso' });
+        }
+      
     } catch (error) {
         console.error('Error al registrar asistencia:', error);
         res.status(500).json({ message: 'Error interno del servidor' });
     }
 });
 
-
 // Función para buscar un alumno por su código
 async function buscarAlumnoPorCodigo(codigo) {
     const query = 'SELECT id FROM alumnos WHERE codigo_alumno = $1';
     const result = await pool.query(query, [codigo]);
+    return result.rows.length > 0 ? result.rows[0].id : null;
+}
+async function buscarAlumnoPorEmail(email) {
+    const query = 'SELECT id FROM alumnos WHERE email = $1';
+    const result = await pool.query(query, [email]);
     return result.rows.length > 0 ? result.rows[0].id : null;
 }
 
