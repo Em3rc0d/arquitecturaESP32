@@ -65,11 +65,26 @@ async function insertarAlumno(codigo, nombre, email) {
     return result.rows[0].id;
 }
 
+function getFormattedDate() {
+  const date = new Date();
+  // Convertir la fecha a la zona horaria de Lima
+  const offset = -5 * 60; // GMT-5 en minutos
+  const limaDate = new Date(date.getTime() + (offset + date.getTimezoneOffset()) * 60000);
+  const year = limaDate.getFullYear();
+  const month = String(limaDate.getMonth() + 1).padStart(2, '0');
+  const day = String(limaDate.getDate()).padStart(2, '0');
+  const hours = String(limaDate.getHours()).padStart(2, '0');
+  const minutes = String(limaDate.getMinutes()).padStart(2, '0');
+  const seconds = String(limaDate.getSeconds()).padStart(2, '0');
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
+
 // Función para registrar la asistencia de un alumno
 async function registrarAsistencia(alumnoId, nombre, email) {
-    const query = 'INSERT INTO asistencia (alumno_id, nombre_alumno, email_alumno, estado, timestamp) VALUES ($1, $2, $3, $4, $5)';
-    const values = [alumnoId, nombre, email, 'asistió', new Date()];
-    await pool.query(query, values);
+  const query = 'INSERT INTO asistencia (alumno_id, nombre_alumno, email_alumno, estado, timestamp) VALUES ($1, $2, $3, $4, $5)';
+  const timestamp = getFormattedDate();
+  const values = [alumnoId, nombre, email, 'asistió', timestamp];
+  await pool.query(query, values);
 }
 
 app.get('/alumnos', async (req, res) => {
@@ -82,15 +97,27 @@ app.get('/alumnos', async (req, res) => {
     }
   });
   
-  app.get('/asistencias', async (req, res) => {
-    try {
+  // Función para ajustar el timestamp a la hora de Lima (GMT-5)
+function adjustToLimaTime(timestamp) {
+  const date = new Date(timestamp);
+  date.setHours(date.getHours() - 5); // Ajustar a GMT-5
+  return date;
+}
+
+app.get('/asistencias', async (req, res) => {
+  try {
       const result = await pool.query('SELECT * FROM asistencia');
-      res.status(200).json(result.rows);
-    } catch (error) {
+      // Ajustar el timestamp para cada fila
+      const adjustedRows = result.rows.map(row => {
+          row.timestamp = adjustToLimaTime(row.timestamp);
+          return row;
+      });
+      res.status(200).json(adjustedRows);
+  } catch (error) {
       console.error('Error al obtener el reporte de asistencias:', error);
       res.status(500).json({ message: 'Error interno del servidor' });
-    }
-  });
+  }
+});
    
 app.listen(port, () => {
     console.log(`Servidor escuchando en http://localhost:${port}`);
