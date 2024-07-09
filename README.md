@@ -59,5 +59,4 @@ Copiar código
 - `README.md`: Documento actual.
 - `package.json`: Dependencias del proyecto.
 - `asistencia.sql`: Script de creación de la tabla asistencia en PostgreSQL
-## Licencia
-Este proyecto está bajo la [MIT License](LICENSE).
+
